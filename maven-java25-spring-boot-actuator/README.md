@@ -359,6 +359,136 @@ java -jar target/spring-boot-java25-actuator-1.0.0.jar --spring.profiles.active=
 java -jar target/spring-boot-java25-actuator-1.0.0.jar --server.port=9090
 ```
 
+## Greeting Endpoint
+
+The Greeting API provides a simple REST endpoint for personalized greetings.
+
+### Endpoint: GET /greet
+
+Returns a personalized greeting message.
+
+**Query Parameters:**
+- `theName` (required): The name of the person to greet
+
+**Example Request:**
+
+```bash
+curl "http://localhost:8080/greet?theName=Carlos"
+```
+
+**Example Response:**
+
+```
+Hello Carlos! Good to see you again
+```
+
+**Response Details:**
+- **Status Code**: 200 OK
+- **Content-Type**: text/plain; charset=UTF-8
+- **Message Format**: `Hello {name}! Good to see you again`
+
+### Greeting API Architecture
+
+The greeting feature demonstrates clean architecture patterns:
+
+- **GreetingService** (Interface): Defines the greeting generation contract
+- **GreetingServiceImpl** (@Service): Implementation of greeting generation logic
+- **GreetingController** (@RestController): HTTP endpoint orchestrating requests to the service
+
+**Service Layer Separation**: Business logic is decoupled from HTTP concerns, enabling reusability and testable code.
+
+### OpenAPI/Swagger Documentation
+
+Interactive API documentation is available via Swagger UI and OpenAPI 3.0 specification.
+
+**Swagger UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
+**OpenAPI Specification**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+
+In Swagger UI, you can:
+- View all endpoints with detailed descriptions
+- See request/response schemas with examples
+- Test endpoints interactively using the "Try it out" button
+
+### Unit Tests
+
+The greeting feature includes comprehensive Spock Framework tests:
+
+- **GreetingServiceImplSpec.groovy**: Behavioral tests for service layer
+  - Message generation correctness
+  - Name case preservation
+  - Stateless behavior verification
+
+- **GreetingControllerSpec.groovy**: Integration tests for HTTP layer
+  - Parameter binding validation
+  - Response status and content type
+  - Service delegation verification
+
+Run tests with:
+
+```bash
+mvn clean test
+```
+
+## Testing the Application Locally
+
+### Test Greeting Endpoint
+
+```bash
+# Simple greeting
+curl "http://localhost:8080/greet?theName=Carlos"
+
+# Different names preserve casing
+curl "http://localhost:8080/greet?theName=alice"
+curl "http://localhost:8080/greet?theName=JohnDoe"
+```
+
+### View OpenAPI Specification
+
+```bash
+# Get OpenAPI JSON specification
+curl "http://localhost:8080/v3/api-docs" | jq
+
+# Filter to greeting endpoint
+curl "http://localhost:8080/v3/api-docs" | jq '.paths."/greet"'
+```
+
+### Health and Metrics
+
+```bash
+# Check application health
+curl "http://localhost:8080/actuator/health"
+
+# View available endpoints
+curl "http://localhost:8080/actuator"
+
+# Check metrics
+curl "http://localhost:8080/actuator/metrics"
+```
+
+## Dependencies and Frameworks
+
+### Core Dependencies
+- **spring-boot-starter**: Core Spring Boot functionality
+- **spring-boot-starter-actuator**: Health checks and metrics
+- **spring-boot-starter-web**: Web support for HTTP endpoints
+- **spring-boot-devtools**: Development productivity features (optional, excluded from production JAR)
+
+### Testing and Validation
+- **Groovy 4.0.14**: Dynamic language for test implementation
+- **Spock 2.3-groovy-4.0**: BDD testing framework with fixtures and mocks
+- **spring-boot-starter-test**: Spring test utilities and assertions
+
+### API Documentation
+- **springdoc-openapi-starter-webmvc-ui 2.0.4**: Automatic OpenAPI 3.0 spec generation
+- **Swagger UI 4.x**: Interactive API documentation and testing
+
+### Logging
+- **SLF4J**: Logging facade (transitive via Spring Boot)
+- **Logback**: SLF4J implementation with configuration
+
+```
+
 ### Java Version Mismatch
 
 Ensure Java 21 is on your PATH:
