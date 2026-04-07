@@ -1,4 +1,3 @@
-````skill
 ---
 name: copyright-insert-java
 description: Automatically insert copyright header into Java and Groovy source files
